@@ -1,20 +1,40 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { AppRegistry, useColorScheme } from "react-native";
+import {
+  MD3DarkTheme,
+  MD3LightTheme,
+  PaperProvider,
+  useTheme,
+} from "react-native-paper";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { name as appName } from "./app.json";
+import Home from "./src/Home";
+import Settings from "./src/Settings";
+import { TaskProvider } from "./src/TaskContext";
+import Completed from "./src/Completed";
+import { useState } from "react";
+
+const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const colorScheme = useColorScheme();
+  const theme = colorScheme === "dark" ? MD3DarkTheme : MD3LightTheme;
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <PaperProvider theme={theme}>
+      <TaskProvider>
+        <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen name="Completed" component={Completed} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </TaskProvider>
+    </PaperProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+AppRegistry.registerComponent(appName, () => App);
