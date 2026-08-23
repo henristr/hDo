@@ -24,7 +24,20 @@
       "package": "com.henristr.hDo"
     },
     "web": {
-      "favicon": "./assets/icon.png"
+      "favicon": "./assets/icon.png",
+      "bundler": "metro",
+      "output": "static",
+      "pwa": {
+        "manifest": {
+          "name": "hDo",
+          "short_name": "hDo",
+          "description": "Meine Expo Web App",
+          "background_color": "#ffffff",
+          "theme_color": "#ffffff",
+          "display": "standalone",
+          "start_url": "/"
+        }
+      }
     },
     "extra": {
       "eas": {
