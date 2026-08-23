@@ -24,7 +24,11 @@
       "package": "com.henristr.hDo"
     },
     "web": {
-      "favicon": "./assets/icon.png"
+      "favicon": "./assets/icon.png",
+      "output": "single"
+    },
+    "experiments": {
+      "baseUrl": "/web"
     },
     "extra": {
       "eas": {
