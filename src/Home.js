@@ -23,6 +23,7 @@ import React from "react";
 import Task from "./components/Task";
 import { useTasks } from "./TaskContext";
 import { supabase } from "./lib/supabase";
+import { LinkingContext } from "@react-navigation/native";
 
 const Home = ({ navigation }) => {
   const theme = useTheme();
@@ -34,6 +35,7 @@ const Home = ({ navigation }) => {
     setCompletedTaskItems,
     fetchTodos,
     userId,
+    logedIn,
   } = useTasks();
 
   const [refreshing, setRefreshing] = useState(false);
@@ -108,54 +110,70 @@ const Home = ({ navigation }) => {
           <IconButton icon="cog"></IconButton>
         </TouchableOpacity>
       </View>
+      {logedIn ? (
+        <>
+          <ScrollView
+            style={styles.taskWrapper}
+            alwaysBounceVertical={true}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          >
+            <Text
+              variant="titleMedium"
+              style={[
+                styles.taskWrapperLabel,
+                { color: theme.colors.onBackground },
+              ]}
+            >
+              Tasks
+            </Text>
+            <View style={styles.tasks}>
+              {taskItems.map((todo) => {
+                if (todo.isCompleted) return null;
+                return (
+                  <TouchableOpacity
+                    key={todo.id}
+                    onPress={() =>
+                      handleCompleteTask(todo.id, todo.isCompleted)
+                    }
+                  >
+                    <Task name={todo.name} />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </ScrollView>
 
-      <ScrollView
-        style={styles.taskWrapper}
-        alwaysBounceVertical={true}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <Text
-          variant="titleMedium"
-          style={[
-            styles.taskWrapperLabel,
-            { color: theme.colors.onBackground },
-          ]}
-        >
-          Tasks
-        </Text>
-        <View style={styles.tasks}>
-          {taskItems.map((todo) => {
-            if (todo.isCompleted) return null;
-            return (
-              <TouchableOpacity
-                key={todo.id}
-                onPress={() => handleCompleteTask(todo.id, todo.isCompleted)}
-              >
-                <Task name={todo.name} />
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </ScrollView>
-
-      <KeyboardAvoidingView behavior="padding" style={styles.writeTaskWrapper}>
-        <View style={styles.inputRow}>
-          <TextInput
-            mode="outlined"
-            style={styles.input}
-            placeholder="Write a Task"
-            value={task}
-            onChangeText={(text) => setTask(text)}
-          />
-          <IconButton
-            icon="plus"
-            mode="contained"
-            onPress={() => handleAddTask(task)}
-          />
-        </View>
-      </KeyboardAvoidingView>
+          <KeyboardAvoidingView
+            behavior="padding"
+            style={styles.writeTaskWrapper}
+          >
+            <View style={styles.inputRow}>
+              <TextInput
+                mode="outlined"
+                style={styles.input}
+                placeholder="Write a Task"
+                value={task}
+                onChangeText={(text) => setTask(text)}
+              />
+              <IconButton
+                icon="plus"
+                mode="contained"
+                onPress={() => handleAddTask(task)}
+              />
+            </View>
+          </KeyboardAvoidingView>
+        </>
+      ) : (
+        <>
+          <View style={styles.signInHelper}>
+            <Button onPress={() => navigation.navigate("Settings")}>
+              <Text variant="headlineMedium"> You need to be Signed In</Text>
+            </Button>
+          </View>
+        </>
+      )}
     </View>
   );
 };
@@ -203,5 +221,10 @@ const styles = StyleSheet.create({
     width: "80%",
     borderRadius: 50,
     justifyContent: "center",
+  },
+  signInHelper: {
+    flex: 1,
+    paddingTop: 64,
+    alignItems: "center",
   },
 });

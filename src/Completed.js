@@ -14,7 +14,7 @@ import { supabase } from "./lib/supabase";
 
 const Completed = ({ navigation }) => {
   const theme = useTheme();
-  const { taskItems, setTaskItems, fetchTodos } = useTasks();
+  const { taskItems, setTaskItems, fetchTodos, logedIn } = useTasks();
 
   const [refreshing, setRefreshing] = useState(false);
 

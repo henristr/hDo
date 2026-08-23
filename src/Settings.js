@@ -4,19 +4,28 @@ import {
   View,
   Vibration,
   Keyboard,
+  Linking,
 } from "react-native";
-import { Appbar, Button, Text, TextInput, useTheme } from "react-native-paper";
+import {
+  Appbar,
+  Button,
+  HelperText,
+  Text,
+  TextInput,
+  useTheme,
+} from "react-native-paper";
 import React, { useEffect, useState } from "react";
 import { useTasks } from "./TaskContext";
 import { supabase } from "./lib/supabase";
 
 const Settings = ({ navigation }) => {
   const theme = useTheme();
-  const { taskItems, setTaskItems } = useTasks();
+  const { taskItems, setTaskItems, fetchTodos, logedIn, setLogedIn } =
+    useTasks();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginMessage, setLoginMessage] = useState("");
-  const [logedIn, setLogedIn] = useState(false);
+
   const [user, setUser] = useState("");
 
   useEffect(() => {
@@ -80,6 +89,20 @@ const Settings = ({ navigation }) => {
       Vibration.vibrate(10);
       Keyboard.dismiss();
       checkUser();
+      setLogedIn(true);
+    }
+  };
+
+  const handleSignOut = async () => {
+    const { data, error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.log(error);
+    } else {
+      fetchTodos();
+      getUser();
+      setTaskItems([]);
+      setLogedIn(false);
     }
   };
 
@@ -100,10 +123,15 @@ const Settings = ({ navigation }) => {
       >
         <Text variant="labelLarge">Account:</Text>
         {logedIn === true ? (
-          <Text>
-            Logged in as:{" "}
-            <Text style={{ color: theme.colors.primary }}>{user?.email}</Text>
-          </Text>
+          <>
+            <Text>
+              Logged in as:{" "}
+              <Text style={{ color: theme.colors.primary }}>{user?.email}</Text>
+            </Text>
+            <View style={styles.accountButtons}>
+              <Button onPress={handleSignOut}>Sign Out</Button>
+            </View>
+          </>
         ) : (
           <>
             <TextInput
@@ -120,11 +148,11 @@ const Settings = ({ navigation }) => {
               mode="flat"
             ></TextInput>
             <View style={styles.accountButtons}>
-              <Button onPress={handleSignIn}>Login</Button>
+              <Button onPress={handleSignIn}>Sign In</Button>
               <Button onPress={handleSignUp}>Sign Up</Button>
             </View>
             {loginMessage === "" ? null : (
-              <Text variant="labelMedium">{loginMessage}</Text>
+              <HelperText>{loginMessage}</HelperText>
             )}
           </>
         )}
@@ -155,6 +183,15 @@ const Settings = ({ navigation }) => {
       >
         <Text>Show completed tasks</Text>
       </TouchableOpacity>
+      <View style={styles.about}>
+        <Button onPress={() => Linking.openURL("mailto:mail@henristr.de")}>
+          <HelperText>mail@henristr.de</HelperText>
+        </Button>
+        <Text>|</Text>
+        <Button onPress={() => Linking.openURL("https://github.com/henristr")}>
+          <HelperText>github.com/henristr</HelperText>
+        </Button>
+      </View>
     </View>
   );
 };
@@ -177,5 +214,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     marginTop: 10,
+  },
+  about: {
+    position: "absolute",
+    bottom: 16,
+    left: 20,
+    right: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -48,7 +48,10 @@ export const TaskProvider = ({ children }) => {
         taskItems,
         setTaskItems,
         fetchTodos,
+        setUserId,
         userId,
+        logedIn,
+        setLogedIn,
       }}
     >
       {children}
