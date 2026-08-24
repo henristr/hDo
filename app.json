@@ -25,10 +25,19 @@
     },
     "web": {
       "favicon": "./assets/icon.png",
-      "output": "single"
-    },
-    "experiments": {
-      "baseUrl": "/web"
+      "bundler": "metro",
+      "output": "single",
+      "pwa": {
+        "manifest": {
+          "name": "hDo",
+          "short_name": "hDo",
+          "description": "Meine Expo Web App",
+          "background_color": "#ffffff",
+          "theme_color": "#ffffff",
+          "display": "standalone",
+          "start_url": "/"
+        }
+      }
     },
     "extra": {
       "eas": {
