@@ -69,6 +69,10 @@ const Completed = ({ navigation }) => {
         <Text
           variant="headlineLarge"
           style={[styles.headline, { color: theme.colors.onBackground }]}
+          onPress={() => {
+            fetchTodos();
+            Vibration.vibrate(10);
+          }}
         >
           hDo
         </Text>

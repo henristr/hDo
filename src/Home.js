@@ -4,12 +4,8 @@ import {
   View,
   ScrollView,
   KeyboardAvoidingView,
-  Platform,
-  Keyboard,
   TouchableOpacity,
   Vibration,
-  Alert,
-  FlatList,
   RefreshControl,
 } from "react-native";
 import {
@@ -23,7 +19,8 @@ import React from "react";
 import Task from "./components/Task";
 import { useTasks } from "./TaskContext";
 import { supabase } from "./lib/supabase";
-import { LinkingContext } from "@react-navigation/native";
+import Alert from "./lib/Alert";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Home = ({ navigation }) => {
   const theme = useTheme();
@@ -39,6 +36,8 @@ const Home = ({ navigation }) => {
   } = useTasks();
 
   const [refreshing, setRefreshing] = useState(false);
+
+  const insets = useSafeAreaInsets();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -70,7 +69,7 @@ const Home = ({ navigation }) => {
       }
     } else {
       Vibration.vibrate([0, 10, 150, 200]);
-      Alert.alert("You have to type something!");
+      Alert.alert("Error:", "You have to type something!");
     }
   };
 
@@ -100,6 +99,10 @@ const Home = ({ navigation }) => {
         <Text
           variant="headlineLarge"
           style={[styles.headline, { color: theme.colors.onBackground }]}
+          onPress={() => {
+            fetchTodos();
+            Vibration.vibrate(10);
+          }}
         >
           hDo
         </Text>
@@ -114,6 +117,7 @@ const Home = ({ navigation }) => {
         <>
           <ScrollView
             style={styles.taskWrapper}
+            contentContainerStyle={{ paddingBottom: 125 + insets.bottom }}
             alwaysBounceVertical={true}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -201,6 +205,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 25,
     paddingBottom: 50,
+    flex: 1,
   },
   tasks: {
     paddingTop: 5,
