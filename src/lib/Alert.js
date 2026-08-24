@@ -15,7 +15,7 @@ const Alert = {
         buttons?.[0]?.onPress?.();
       }
     } else {
-      Alert.alert(title, message, buttons);
+      RNAlert.alert(title, message, buttons);
     }
   },
 };

@@ -31,7 +31,6 @@ const Home = ({ navigation }) => {
     completedTaskItems,
     setCompletedTaskItems,
     fetchTodos,
-    userId,
     logedIn,
   } = useTasks();
 
@@ -50,7 +49,6 @@ const Home = ({ navigation }) => {
       const newTodoData = {
         name: task,
         isCompleted: false,
-        user_id: userId,
       };
 
       const { data, error } = await supabase
