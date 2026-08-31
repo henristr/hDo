@@ -20,6 +20,7 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions": ["FOREGROUND_SERVICE", "POST_NOTIFICATIONS"],
       "edgeToEdgeEnabled": true,
       "package": "com.henristr.hDo"
     },
@@ -31,7 +32,7 @@
         "manifest": {
           "name": "hDo",
           "short_name": "hDo",
-          "description": "Meine Expo Web App",
+          "description": "hDo your modern ToDo app",
           "background_color": "#ffffff",
           "theme_color": "#ffffff",
           "display": "standalone",
@@ -43,6 +44,7 @@
       "eas": {
         "projectId": "06fce2d0-0f2d-43fc-a990-14f4a6800f82"
       }
-    }
+    },
+    "plugins": ["./plugins/withNotifeeMaven"]
   }
 }

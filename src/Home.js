@@ -15,7 +15,6 @@ import {
   Button,
   IconButton,
 } from "react-native-paper";
-import React from "react";
 import Task from "./components/Task";
 import { useTasks } from "./TaskContext";
 import { supabase } from "./lib/supabase";
@@ -25,14 +24,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 const Home = ({ navigation }) => {
   const theme = useTheme();
   const [task, setTask] = useState("");
-  const {
-    taskItems,
-    setTaskItems,
-    completedTaskItems,
-    setCompletedTaskItems,
-    fetchTodos,
-    logedIn,
-  } = useTasks();
+  const { taskItems, setTaskItems, fetchTodos, logedIn } = useTasks();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -104,12 +96,16 @@ const Home = ({ navigation }) => {
         >
           hDo
         </Text>
-        <TouchableOpacity
-          style={styles.settingsWrapper}
-          onPress={() => navigation.navigate("Settings")}
-        >
-          <IconButton icon="cog"></IconButton>
-        </TouchableOpacity>
+        <View style={styles.settingsWrapper}>
+          <IconButton
+            icon="bell-badge"
+            onPress={() => navigation.navigate("Notifications")}
+          />
+          <IconButton
+            icon="cog"
+            onPress={() => navigation.navigate("Settings")}
+          ></IconButton>
+        </View>
       </View>
       {logedIn ? (
         <>
@@ -158,6 +154,7 @@ const Home = ({ navigation }) => {
                 placeholder="Write a Task"
                 value={task}
                 onChangeText={(text) => setTask(text)}
+                onSubmitEditing={() => handleAddTask(task)}
               />
               <IconButton
                 icon="plus"
@@ -198,6 +195,7 @@ const styles = StyleSheet.create({
   },
   settingsWrapper: {
     alignItems: "flex-end",
+    flexDirection: "row",
   },
   taskWrapper: {
     paddingHorizontal: 20,

@@ -11,6 +11,7 @@ export const TaskProvider = ({ children }) => {
   const [completedTaskItems, setCompletedTaskItems] = useState([]);
   const [logedIn, setLogedIn] = useState(false);
   const [userId, setUserId] = useState("");
+  const [notificationTask, setNotificationTask] = useState("");
 
   useEffect(() => {
     fetchTodos();
@@ -52,6 +53,8 @@ export const TaskProvider = ({ children }) => {
         userId,
         logedIn,
         setLogedIn,
+        notificationTask,
+        setNotificationTask,
       }}
     >
       {children}
