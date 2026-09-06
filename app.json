@@ -20,7 +20,11 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "permissions": ["FOREGROUND_SERVICE", "POST_NOTIFICATIONS"],
+      "permissions": [
+        "FOREGROUND_SERVICE",
+        "FOREGROUND_SERVICE_SPECIAL_USE",
+        "POST_NOTIFICATIONS"
+      ],
       "edgeToEdgeEnabled": true,
       "package": "com.henristr.hDo"
     },

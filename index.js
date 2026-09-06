@@ -1,12 +1,22 @@
 import { registerRootComponent } from "expo";
-import notifee from "@notifee/react-native";
+import notifee, { EventType } from "@notifee/react-native";
 
 import App from "./App";
 
 notifee.registerForegroundService((notification) => {
   return new Promise(() => {});
 });
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
+
+notifee.onBackgroundEvent(async ({ type, detail }) => {
+  const { notification, pressAction } = detail;
+
+  if (type === EventType.PRESS) {
+    console.log("Pressed: ", notification);
+  }
+
+  if (type === EventType.DISMISSED) {
+    console.log("Dismissed: ", notification);
+  }
+});
+
 registerRootComponent(App);
