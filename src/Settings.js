@@ -183,6 +183,7 @@ const Settings = ({ navigation }) => {
       >
         <Text>Show completed tasks</Text>
       </TouchableOpacity>
+
       <View style={styles.about}>
         <Button onPress={() => Linking.openURL("mailto:mail@henristr.de")}>
           <HelperText>mail@henristr.de</HelperText>

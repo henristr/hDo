@@ -36,10 +36,10 @@ const Notifications = ({ navigation }) => {
   };
 
   const setNotification = async (name, createdAt) => {
-    stopLiveNotification();
+    startLiveNotification("", date);
     setNotificationTask(name);
     const date = new Date(createdAt);
-    startLiveNotification(name, date.toLocaleString("de-DE"));
+    await startLiveNotification(name, date.toLocaleString("de-DE"));
   };
 
   const disableNotifications = async () => {

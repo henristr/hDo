@@ -1,11 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { AppRegistry, useColorScheme } from "react-native";
-import {
-  MD3DarkTheme,
-  MD3LightTheme,
-  PaperProvider,
-  useTheme,
-} from "react-native-paper";
+import { MD3DarkTheme, MD3LightTheme, PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { name as appName } from "./app.json";
@@ -13,7 +8,7 @@ import Home from "./src/Home";
 import Settings from "./src/Settings";
 import { TaskProvider } from "./src/TaskContext";
 import Completed from "./src/Completed";
-import { useState } from "react";
+
 import Notifications from "./src/Notifications";
 
 const Stack = createNativeStackNavigator();

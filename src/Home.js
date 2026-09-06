@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -14,17 +14,20 @@ import {
   TextInput,
   Button,
   IconButton,
+  Searchbar,
 } from "react-native-paper";
 import Task from "./components/Task";
 import { useTasks } from "./TaskContext";
 import { supabase } from "./lib/supabase";
 import Alert from "./lib/Alert";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { requestPermission, createChannel } from "./lib/notification";
 
 const Home = ({ navigation }) => {
   const theme = useTheme();
   const [task, setTask] = useState("");
   const { taskItems, setTaskItems, fetchTodos, logedIn } = useTasks();
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -81,6 +84,11 @@ const Home = ({ navigation }) => {
     }
   };
 
+  useEffect(() => {
+    requestPermission();
+    createChannel();
+  }, []);
+
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -127,19 +135,39 @@ const Home = ({ navigation }) => {
               Tasks
             </Text>
             <View style={styles.tasks}>
-              {taskItems.map((todo) => {
-                if (todo.isCompleted) return null;
-                return (
-                  <TouchableOpacity
-                    key={todo.id}
-                    onPress={() =>
-                      handleCompleteTask(todo.id, todo.isCompleted)
-                    }
-                  >
-                    <Task name={todo.name} />
-                  </TouchableOpacity>
-                );
-              })}
+              <Searchbar
+                style={[
+                  styles.searchbar,
+                  { backgroundColor: theme.colors.surfaceVariant },
+                ]}
+                placeholder="Search"
+                onChangeText={setSearchQuery}
+                value={searchQuery}
+              />
+              <View
+                style={[
+                  styles.vLine,
+                  { backgroundColor: theme.colors.outline },
+                ]}
+              />
+              {taskItems
+                .filter((todo) => !todo.isCompleted)
+                .filter((todo) =>
+                  todo.name.toLowerCase().includes(searchQuery.toLowerCase()),
+                )
+                .map((todo) => {
+                  if (todo.isCompleted) return null;
+                  return (
+                    <TouchableOpacity
+                      key={todo.id}
+                      onPress={() =>
+                        handleCompleteTask(todo.id, todo.isCompleted)
+                      }
+                    >
+                      <Task name={todo.name} />
+                    </TouchableOpacity>
+                  );
+                })}
             </View>
           </ScrollView>
 
@@ -227,5 +255,12 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 64,
     alignItems: "center",
+  },
+  searchbar: {
+    marginTop: 8,
+  },
+  vLine: {
+    height: 1,
+    marginTop: 16,
   },
 });
