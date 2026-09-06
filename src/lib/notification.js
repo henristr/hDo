@@ -1,7 +1,14 @@
-import notifee, { AndroidImportance } from "@notifee/react-native";
+import notifee, {
+  AndroidImportance,
+  AndroidForegroundServiceType,
+} from "@notifee/react-native";
 
 const CHANNEL_ID = "live-channel";
 const NOTIFICATION_ID = "live-notif-1";
+
+notifee.registerForegroundService((notification) => {
+  return new Promise(() => {});
+});
 
 export async function requestPermission() {
   await notifee.requestPermission();
@@ -24,6 +31,9 @@ export async function startLiveNotification(task, createdAt) {
       channelId: CHANNEL_ID,
       ongoing: true,
       asForegroundService: true,
+      foregroundServiceTypes: [
+        AndroidForegroundServiceType.FOREGROUND_SERVICE_TYPE_SPECIAL_USE,
+      ],
       pressAction: {
         id: "default",
       },
