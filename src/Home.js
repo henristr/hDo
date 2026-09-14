@@ -15,6 +15,9 @@ import {
   Button,
   IconButton,
   Searchbar,
+  Modal,
+  Portal,
+  TouchableRipple,
 } from "react-native-paper";
 import Task from "./components/Task";
 import { useTasks } from "./TaskContext";
@@ -28,10 +31,21 @@ const Home = ({ navigation }) => {
   const [task, setTask] = useState("");
   const { taskItems, setTaskItems, fetchTodos, logedIn } = useTasks();
   const [searchQuery, setSearchQuery] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalContent, setModalContent] = useState("");
+  const [modalId, setModalId] = useState(0);
 
   const [refreshing, setRefreshing] = useState(false);
 
   const insets = useSafeAreaInsets();
+
+  const containerStyle = {
+    backgroundColor: theme.colors.surface,
+    padding: 20,
+    margin: 20,
+    borderRadius: 12,
+  };
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -82,6 +96,49 @@ const Home = ({ navigation }) => {
       );
       setTaskItems(updatedTodoList);
     }
+  };
+
+  const updateTaskName = async (id, name) => {
+    const { data, error } = await supabase
+      .from("Todo")
+      .update({ name: name })
+      .eq("id", id);
+
+    if (error) {
+      console.log("Error updating Todo: ", error);
+      Vibration.vibrate([0, 10, 150, 200]);
+    } else {
+      Vibration.vibrate(10);
+      const updatedTodoList = taskItems.map((todo) =>
+        todo.id === id ? { ...todo, name: name } : todo,
+      );
+      setTaskItems(updatedTodoList);
+    }
+  };
+
+  const updateTaskContent = async (id, content) => {
+    const { data, error } = await supabase
+      .from("Todo")
+      .update({ content: content })
+      .eq("id", id);
+
+    if (error) {
+      console.log("Error updating Todo: ", error);
+      Vibration.vibrate([0, 10, 150, 200]);
+    } else {
+      Vibration.vibrate(10);
+      const updatedTodoList = taskItems.map((todo) =>
+        todo.id === id ? { ...todo, content: content } : todo,
+      );
+      setTaskItems(updatedTodoList);
+    }
+  };
+
+  const showModal = (todo) => {
+    setModalVisible(true);
+    setModalTitle(todo.name);
+    setModalContent(todo.content);
+    console.log(todo.id);
   };
 
   useEffect(() => {
@@ -163,11 +220,50 @@ const Home = ({ navigation }) => {
                       onPress={() =>
                         handleCompleteTask(todo.id, todo.isCompleted)
                       }
+                      onLongPress={() => {
+                        showModal(todo);
+                        setModalId(todo.id);
+                      }}
                     >
                       <Task name={todo.name} />
                     </TouchableOpacity>
                   );
                 })}
+              <Portal>
+                <Modal
+                  visible={modalVisible}
+                  onDismiss={() => setModalVisible(false)}
+                  contentContainerStyle={containerStyle}
+                >
+                  <Text variant="titleMedium">Name</Text>
+                  <View style={styles.modalTitle}>
+                    <TextInput
+                      value={modalTitle}
+                      onChangeText={(text) => {
+                        setModalTitle(text);
+                        updateTaskName(modalId, text);
+                      }}
+                    />
+                  </View>
+                  <View
+                    style={[
+                      styles.vLine,
+                      { backgroundColor: theme.colors.outline },
+                    ]}
+                  />
+
+                  <View style={styles.modalContent}>
+                    <Text variant="titleMedium">Content</Text>
+                    <TextInput
+                      value={modalContent}
+                      onChangeText={(text) => {
+                        setModalContent(text);
+                        updateTaskContent(modalId, text);
+                      }}
+                    />
+                  </View>
+                </Modal>
+              </Portal>
             </View>
           </ScrollView>
 
@@ -262,5 +358,11 @@ const styles = StyleSheet.create({
   vLine: {
     height: 1,
     marginTop: 16,
+  },
+  modalTitle: {
+    paddingBottom: 8,
+  },
+  modalContent: {
+    paddingTop: 16,
   },
 });
