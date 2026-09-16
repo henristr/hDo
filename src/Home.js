@@ -134,6 +134,13 @@ const Home = ({ navigation }) => {
     }
   };
 
+  const updateTask = () => {
+    updateTaskName(modalId, modalTitle);
+    updateTaskContent(modalId, modalContent);
+    setModalVisible(false);
+    fetchTodos();
+  };
+
   const showModal = (todo) => {
     setModalVisible(true);
     setModalTitle(todo.name);
@@ -239,10 +246,7 @@ const Home = ({ navigation }) => {
                   <View style={styles.modalTitle}>
                     <TextInput
                       value={modalTitle}
-                      onChangeText={(text) => {
-                        setModalTitle(text);
-                        updateTaskName(modalId, text);
-                      }}
+                      onChangeText={(text) => setModalTitle(text)}
                     />
                   </View>
                   <View
@@ -256,11 +260,14 @@ const Home = ({ navigation }) => {
                     <Text variant="titleMedium">Content</Text>
                     <TextInput
                       value={modalContent}
-                      onChangeText={(text) => {
-                        setModalContent(text);
-                        updateTaskContent(modalId, text);
-                      }}
+                      onChangeText={(text) => setModalContent(text)}
                     />
+                  </View>
+                  <View style={styles.modalButtons}>
+                    <Button onPress={() => setModalVisible(false)}>
+                      Cancel
+                    </Button>
+                    <Button onPress={updateTask}>Ok</Button>
                   </View>
                 </Modal>
               </Portal>
@@ -364,5 +371,11 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     paddingTop: 16,
+  },
+  modalButtons: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 16,
   },
 });

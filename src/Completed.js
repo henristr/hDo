@@ -11,12 +11,15 @@ import React, { useState } from "react";
 import Task from "./components/Task";
 import { useTasks } from "./TaskContext";
 import { supabase } from "./lib/supabase";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Completed = ({ navigation }) => {
   const theme = useTheme();
   const { taskItems, setTaskItems, fetchTodos, logedIn } = useTasks();
 
   const [refreshing, setRefreshing] = useState(false);
+
+  const insets = useSafeAreaInsets();
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -88,6 +91,7 @@ const Completed = ({ navigation }) => {
 
       <ScrollView
         style={styles.taskWrapper}
+        contentContainerStyle={{ paddingBottom: 125 + insets.bottom }}
         alwaysBounceVertical={true}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -142,6 +146,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 25,
     paddingBottom: 50,
+    flex: 1,
   },
   tasks: {
     paddingTop: 5,
