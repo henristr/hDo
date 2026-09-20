@@ -10,31 +10,27 @@ import { TaskProvider } from "./src/TaskContext";
 import Completed from "./src/Completed";
 import Notifications from "./src/Notifications";
 import { getLocales, getCalendars } from "expo-localization";
-import { LanguageProvider } from "react-native-translation";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   const colorScheme = useColorScheme();
   const theme = colorScheme === "dark" ? MD3DarkTheme : MD3LightTheme;
-  const locale = getLocales()[0]?.languageTag ?? "en-US";
 
   return (
-    <LanguageProvider language={locale}>
-      <PaperProvider theme={theme}>
-        <TaskProvider>
-          <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
-          <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="Home" component={Home} />
-              <Stack.Screen name="Settings" component={Settings} />
-              <Stack.Screen name="Completed" component={Completed} />
-              <Stack.Screen name="Notifications" component={Notifications} />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </TaskProvider>
-      </PaperProvider>
-    </LanguageProvider>
+    <PaperProvider theme={theme}>
+      <TaskProvider>
+        <StatusBar barStyle={theme.dark ? "light-content" : "dark-content"} />
+        <NavigationContainer>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Settings" component={Settings} />
+            <Stack.Screen name="Completed" component={Completed} />
+            <Stack.Screen name="Notifications" component={Notifications} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </TaskProvider>
+    </PaperProvider>
   );
 }
 

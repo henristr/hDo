@@ -5,6 +5,7 @@ import {
   ScrollView,
   Vibration,
   RefreshControl,
+  Platform,
 } from "react-native";
 import { Appbar, Text, useTheme, IconButton } from "react-native-paper";
 import React, { useState } from "react";
@@ -22,7 +23,10 @@ const Completed = ({ navigation }) => {
 
   const insets = useSafeAreaInsets();
 
-  const locale = getLocales()[0]?.languageTag ?? "en-US";
+  const locale =
+    Platform.OS === "web"
+      ? (navigator.language ?? "en-US")
+      : (getLocales()[0]?.languageTag ?? "en-US");
 
   const onRefresh = async () => {
     setRefreshing(true);

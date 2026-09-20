@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Vibration,
   RefreshControl,
+  Platform,
 } from "react-native";
 import {
   Text,
@@ -17,7 +18,6 @@ import {
   Searchbar,
   Modal,
   Portal,
-  TouchableRipple,
 } from "react-native-paper";
 import Task from "./components/Task";
 import { useTasks } from "./TaskContext";
@@ -41,7 +41,10 @@ const Home = ({ navigation }) => {
 
   const insets = useSafeAreaInsets();
 
-  const locale = getLocales()[0]?.languageTag ?? "en-US";
+  const locale =
+    Platform.OS === "web"
+      ? (navigator.language ?? "en-US")
+      : (getLocales()[0]?.languageTag ?? "en-US");
 
   const containerStyle = {
     backgroundColor: theme.colors.surface,

@@ -5,6 +5,7 @@ import {
   Vibration,
   Keyboard,
   Linking,
+  Platform,
 } from "react-native";
 import {
   Appbar,
@@ -29,7 +30,10 @@ const Settings = ({ navigation }) => {
 
   const [user, setUser] = useState("");
 
-  const locale = getLocales()[0]?.languageTag ?? "en-US";
+  const locale =
+    Platform.OS === "web"
+      ? (navigator.language ?? "en-US")
+      : (getLocales()[0]?.languageTag ?? "en-US");
 
   useEffect(() => {
     checkUser();
