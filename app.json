@@ -49,6 +49,9 @@
         "projectId": "06fce2d0-0f2d-43fc-a990-14f4a6800f82"
       }
     },
-    "plugins": ["./plugins/withNotifeeMaven"]
+    "plugins": [
+      "./plugins/withNotifeeMaven",
+      "expo-localization"
+    ]
   }
 }

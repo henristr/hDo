@@ -25,6 +25,7 @@ import { supabase } from "./lib/supabase";
 import Alert from "./lib/Alert";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { requestPermission, createChannel } from "./lib/notification";
+import { getLocales } from "expo-localization";
 
 const Home = ({ navigation }) => {
   const theme = useTheme();
@@ -39,6 +40,8 @@ const Home = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const insets = useSafeAreaInsets();
+
+  const locale = getLocales()[0]?.languageTag ?? "en-US";
 
   const containerStyle = {
     backgroundColor: theme.colors.surface,
@@ -153,6 +156,117 @@ const Home = ({ navigation }) => {
     createChannel();
   }, []);
 
+  const translate = (dictionary, locale) =>
+    dictionary[locale] ?? dictionary["en-US"];
+
+  const taskHeader = {
+    "de-DE": "Aufgaben",
+    "en-US": "Tasks",
+    "fr-FR": "Tâches",
+    "es-ES": "Tareas",
+    "it-IT": "Attività",
+    "pt-PT": "Tarefas",
+    "nl-NL": "Taken",
+    "pl-PL": "Zadania",
+    "tr-TR": "Görevler",
+    "ru-RU": "Задачи",
+    "uk-UA": "Завдання",
+    "ar-SA": "المهام",
+    "zh-CN": "任务",
+    "ja-JP": "タスク",
+    "ko-KR": "작업",
+  };
+
+  const signInLabel = {
+    "de-DE": "Du musst angemeldet sein",
+    "en-US": "You need to be signed in",
+    "fr-FR": "Vous devez être connecté",
+    "es-ES": "Debes iniciar sesión",
+    "it-IT": "Devi aver effettuato l'accesso",
+    "pt-PT": "Tens de iniciar sessão",
+    "nl-NL": "Je moet ingelogd zijn",
+    "pl-PL": "Musisz się zalogować",
+    "tr-TR": "Giriş yapmanız gerekiyor",
+    "ru-RU": "Необходимо войти в аккаунт",
+    "uk-UA": "Потрібно увійти в обліковий запис",
+    "ar-SA": "يجب تسجيل الدخول",
+    "zh-CN": "你需要登录",
+    "ja-JP": "ログインする必要があります",
+    "ko-KR": "로그인해야 합니다",
+  };
+
+  const writeTaskLabel = {
+    "de-DE": "Aufgabe schreiben",
+    "en-US": "Write a Task",
+    "fr-FR": "Écrire une tâche",
+    "es-ES": "Escribir una tarea",
+    "it-IT": "Scrivi un'attività",
+    "pt-PT": "Escrever uma tarefa",
+    "nl-NL": "Een taak schrijven",
+    "pl-PL": "Napisz zadanie",
+    "tr-TR": "Bir görev yaz",
+    "ru-RU": "Напишите задачу",
+    "uk-UA": "Напишіть завдання",
+    "ar-SA": "اكتب مهمة",
+    "zh-CN": "写任务",
+    "ja-JP": "タスクを書く",
+    "ko-KR": "할 일 작성",
+  };
+
+  const searchLabel = {
+    "de-DE": "Suchen",
+    "en-US": "Search",
+    "fr-FR": "Rechercher",
+    "es-ES": "Buscar",
+    "it-IT": "Cerca",
+    "pt-PT": "Pesquisar",
+    "nl-NL": "Zoeken",
+    "pl-PL": "Szukaj",
+    "tr-TR": "Ara",
+    "ru-RU": "Поиск",
+    "uk-UA": "Пошук",
+    "ar-SA": "بحث",
+    "zh-CN": "搜索",
+    "ja-JP": "検索",
+    "ko-KR": "검색",
+  };
+
+  const nameLabel = {
+    "de-DE": "Name",
+    "en-US": "Name",
+    "fr-FR": "Nom",
+    "es-ES": "Nombre",
+    "it-IT": "Nome",
+    "pt-PT": "Nome",
+    "nl-NL": "Naam",
+    "pl-PL": "Nazwa",
+    "tr-TR": "Ad",
+    "ru-RU": "Имя",
+    "uk-UA": "Назва",
+    "ar-SA": "الاسم",
+    "zh-CN": "名称",
+    "ja-JP": "名前",
+    "ko-KR": "이름",
+  };
+
+  const contentLabel = {
+    "de-DE": "Inhalt",
+    "en-US": "Content",
+    "fr-FR": "Contenu",
+    "es-ES": "Contenido",
+    "it-IT": "Contenuto",
+    "pt-PT": "Conteúdo",
+    "nl-NL": "Inhoud",
+    "pl-PL": "Treść",
+    "tr-TR": "İçerik",
+    "ru-RU": "Содержание",
+    "uk-UA": "Вміст",
+    "ar-SA": "المحتوى",
+    "zh-CN": "内容",
+    "ja-JP": "内容",
+    "ko-KR": "내용",
+  };
+
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
@@ -196,7 +310,7 @@ const Home = ({ navigation }) => {
                 { color: theme.colors.onBackground },
               ]}
             >
-              Tasks
+              {translate(taskHeader, locale)}
             </Text>
             <View style={styles.tasks}>
               <Searchbar
@@ -204,7 +318,7 @@ const Home = ({ navigation }) => {
                   styles.searchbar,
                   { backgroundColor: theme.colors.surfaceVariant },
                 ]}
-                placeholder="Search"
+                placeholder={translate(searchLabel, locale)}
                 onChangeText={setSearchQuery}
                 value={searchQuery}
               />
@@ -242,7 +356,9 @@ const Home = ({ navigation }) => {
                   onDismiss={() => setModalVisible(false)}
                   contentContainerStyle={containerStyle}
                 >
-                  <Text variant="titleMedium">Name</Text>
+                  <Text variant="titleMedium">
+                    {translate(nameLabel, locale)}
+                  </Text>
                   <View style={styles.modalTitle}>
                     <TextInput
                       value={modalTitle}
@@ -257,7 +373,9 @@ const Home = ({ navigation }) => {
                   />
 
                   <View style={styles.modalContent}>
-                    <Text variant="titleMedium">Content</Text>
+                    <Text variant="titleMedium">
+                      {translate(contentLabel, locale)}
+                    </Text>
                     <TextInput
                       value={modalContent}
                       onChangeText={(text) => setModalContent(text)}
@@ -282,7 +400,7 @@ const Home = ({ navigation }) => {
               <TextInput
                 mode="outlined"
                 style={styles.input}
-                placeholder="Write a Task"
+                placeholder={translate(writeTaskLabel, locale)}
                 value={task}
                 onChangeText={(text) => setTask(text)}
                 onSubmitEditing={() => handleAddTask(task)}
@@ -299,7 +417,9 @@ const Home = ({ navigation }) => {
         <>
           <View style={styles.signInHelper}>
             <Button onPress={() => navigation.navigate("Settings")}>
-              <Text variant="headlineMedium"> You need to be Signed In</Text>
+              <Text variant="headlineMedium">
+                {translate(signInLabel, locale)}
+              </Text>
             </Button>
           </View>
         </>
