@@ -5,7 +5,6 @@ import {
   Vibration,
   Keyboard,
   Linking,
-  Platform,
 } from "react-native";
 import {
   Appbar,
@@ -15,10 +14,10 @@ import {
   TextInput,
   useTheme,
 } from "react-native-paper";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTasks } from "./TaskContext";
 import { supabase } from "./lib/supabase";
-import { getLocales } from "expo-localization";
+import { translate, translations } from "./lib/translations";
 
 const Settings = ({ navigation }) => {
   const theme = useTheme();
@@ -29,11 +28,6 @@ const Settings = ({ navigation }) => {
   const [loginMessage, setLoginMessage] = useState("");
 
   const [user, setUser] = useState("");
-
-  const locale =
-    Platform.OS === "web"
-      ? (navigator.language ?? "en-US")
-      : (getLocales()[0]?.languageTag ?? "en-US");
 
   useEffect(() => {
     checkUser();
@@ -113,142 +107,13 @@ const Settings = ({ navigation }) => {
     }
   };
 
-  const translate = (dictionary, locale) =>
-    dictionary[locale] ?? dictionary["en-US"];
-
-  const loggedInAsLabel = {
-    "de-DE": "Angemeldet als:",
-    "en-US": "Logged in as:",
-    "fr-FR": "Connecté en tant que :",
-    "es-ES": "Conectado como:",
-    "it-IT": "Accesso effettuato come:",
-    "pt-PT": "Sessão iniciada como:",
-    "nl-NL": "Ingelogd als:",
-    "pl-PL": "Zalogowano jako:",
-    "tr-TR": "Şu hesapla giriş yapıldı:",
-    "ru-RU": "Вы вошли как:",
-    "uk-UA": "Ви увійшли як:",
-    "ar-SA": "تم تسجيل الدخول باسم:",
-    "zh-CN": "登录身份：",
-    "ja-JP": "ログイン中：",
-    "ko-KR": "로그인 계정:",
-  };
-
-  const signInLabel = {
-    "de-DE": "Anmelden",
-    "en-US": "Sign In",
-    "fr-FR": "Se connecter",
-    "es-ES": "Iniciar sesión",
-    "it-IT": "Accedi",
-    "pt-PT": "Iniciar sessão",
-    "nl-NL": "Inloggen",
-    "pl-PL": "Zaloguj się",
-    "tr-TR": "Giriş yap",
-    "ru-RU": "Войти",
-    "uk-UA": "Увійти",
-    "ar-SA": "تسجيل الدخول",
-    "zh-CN": "登录",
-    "ja-JP": "ログイン",
-    "ko-KR": "로그인",
-  };
-
-  const signUpLabel = {
-    "de-DE": "Registrieren",
-    "en-US": "Sign Up",
-    "fr-FR": "S'inscrire",
-    "es-ES": "Registrarse",
-    "it-IT": "Registrati",
-    "pt-PT": "Registar",
-    "nl-NL": "Registreren",
-    "pl-PL": "Zarejestruj się",
-    "tr-TR": "Kayıt ol",
-    "ru-RU": "Зарегистрироваться",
-    "uk-UA": "Зареєструватися",
-    "ar-SA": "إنشاء حساب",
-    "zh-CN": "注册",
-    "ja-JP": "新規登録",
-    "ko-KR": "가입",
-  };
-
-  const signOutLabel = {
-    "de-DE": "Abmelden",
-    "en-US": "Sign Out",
-    "fr-FR": "Se déconnecter",
-    "es-ES": "Cerrar sesión",
-    "it-IT": "Esci",
-    "pt-PT": "Terminar sessão",
-    "nl-NL": "Uitloggen",
-    "pl-PL": "Wyloguj się",
-    "tr-TR": "Çıkış yap",
-    "ru-RU": "Выйти",
-    "uk-UA": "Вийти",
-    "ar-SA": "تسجيل الخروج",
-    "zh-CN": "退出登录",
-    "ja-JP": "ログアウト",
-    "ko-KR": "로그아웃",
-  };
-
-  const deleteAllTasksLabel = {
-    "de-DE": "Alle Aufgaben löschen",
-    "en-US": "Delete all tasks",
-    "fr-FR": "Supprimer toutes les tâches",
-    "es-ES": "Eliminar todas las tareas",
-    "it-IT": "Elimina tutte le attività",
-    "pt-PT": "Eliminar todas as tarefas",
-    "nl-NL": "Alle taken verwijderen",
-    "pl-PL": "Usuń wszystkie zadania",
-    "tr-TR": "Tüm görevleri sil",
-    "ru-RU": "Удалить все задачи",
-    "uk-UA": "Видалити всі завдання",
-    "ar-SA": "حذف جميع المهام",
-    "zh-CN": "删除所有任务",
-    "ja-JP": "すべてのタスクを削除",
-    "ko-KR": "모든 할 일 삭제",
-  };
-
-  const showCompletedTasksLabel = {
-    "de-DE": "Erledigte Aufgaben anzeigen",
-    "en-US": "Show completed tasks",
-    "fr-FR": "Afficher les tâches terminées",
-    "es-ES": "Mostrar tareas completadas",
-    "it-IT": "Mostra attività completate",
-    "pt-PT": "Mostrar tarefas concluídas",
-    "nl-NL": "Voltooide taken weergeven",
-    "pl-PL": "Pokaż ukończone zadania",
-    "tr-TR": "Tamamlanan görevleri göster",
-    "ru-RU": "Показать выполненные задачи",
-    "uk-UA": "Показати виконані завдання",
-    "ar-SA": "عرض المهام المكتملة",
-    "zh-CN": "显示已完成的任务",
-    "ja-JP": "完了したタスクを表示",
-    "ko-KR": "완료된 할 일 보기",
-  };
-
-  const settingsLabel = {
-    "de-DE": "Einstellungen",
-    "en-US": "Settings",
-    "fr-FR": "Paramètres",
-    "es-ES": "Ajustes",
-    "it-IT": "Impostazioni",
-    "pt-PT": "Definições",
-    "nl-NL": "Instellingen",
-    "pl-PL": "Ustawienia",
-    "tr-TR": "Ayarlar",
-    "ru-RU": "Настройки",
-    "uk-UA": "Налаштування",
-    "ar-SA": "الإعدادات",
-    "zh-CN": "设置",
-    "ja-JP": "設定",
-    "ko-KR": "설정",
-  };
-
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title={translate(settingsLabel, locale)} />
+        <Appbar.Content title={translate(translations.settings)} />
       </Appbar.Header>
 
       <View
@@ -257,29 +122,29 @@ const Settings = ({ navigation }) => {
           { backgroundColor: theme.colors.surfaceVariant },
         ]}
       >
-        <Text variant="labelLarge">Account:</Text>
+        <Text variant="labelLarge">{translate(translations.account)}:</Text>
         {logedIn === true ? (
           <>
             <Text>
-              {translate(loggedInAsLabel, locale)}{" "}
+              {translate(translations.loggedInAs)}{" "}
               <Text style={{ color: theme.colors.primary }}>{user?.email}</Text>
             </Text>
             <View style={styles.accountButtons}>
               <Button onPress={handleSignOut}>
-                {translate(signOutLabel, locale)}
+                {translate(translations.signOut)}
               </Button>
             </View>
           </>
         ) : (
           <>
             <TextInput
-              placeholder="Email"
+              placeholder={translate(translations.email)}
               value={email}
               onChangeText={(t) => setEmail(t)}
               mode="flat"
             ></TextInput>
             <TextInput
-              placeholder="Password"
+              placeholder={translate(translations.password)}
               value={password}
               onChangeText={(t) => setPassword(t)}
               secureTextEntry
@@ -287,10 +152,10 @@ const Settings = ({ navigation }) => {
             ></TextInput>
             <View style={styles.accountButtons}>
               <Button onPress={handleSignIn}>
-                {translate(signInLabel, locale)}
+                {translate(translations.signIn)}
               </Button>
               <Button onPress={handleSignUp}>
-                {translate(signUpLabel, locale)}
+                {translate(translations.signUp)}
               </Button>
             </View>
             {loginMessage === "" ? null : (
@@ -310,7 +175,7 @@ const Settings = ({ navigation }) => {
           Vibration.vibrate(10);
         }}
       >
-        <Text>{translate(deleteAllTasksLabel, locale)}</Text>
+        <Text>{translate(translations.deleteAllTasks)}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
@@ -323,7 +188,7 @@ const Settings = ({ navigation }) => {
           Vibration.vibrate(10);
         }}
       >
-        <Text>{translate(showCompletedTasksLabel, locale)}</Text>
+        <Text>{translate(translations.showCompletedTasks)}</Text>
       </TouchableOpacity>
 
       <View style={styles.about}>

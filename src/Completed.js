@@ -5,15 +5,14 @@ import {
   ScrollView,
   Vibration,
   RefreshControl,
-  Platform,
 } from "react-native";
 import { Appbar, Text, useTheme, IconButton } from "react-native-paper";
-import React, { useState } from "react";
+import { useState } from "react";
 import Task from "./components/Task";
 import { useTasks } from "./TaskContext";
 import { supabase } from "./lib/supabase";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { getLocales } from "expo-localization";
+import { translate, translations } from "./lib/translations";
 
 const Completed = ({ navigation }) => {
   const theme = useTheme();
@@ -22,11 +21,6 @@ const Completed = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
 
   const insets = useSafeAreaInsets();
-
-  const locale =
-    Platform.OS === "web"
-      ? (navigator.language ?? "en-US")
-      : (getLocales()[0]?.languageTag ?? "en-US");
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -67,52 +61,13 @@ const Completed = ({ navigation }) => {
     }
   };
 
-  const translate = (dictionary, locale) =>
-    dictionary[locale] ?? dictionary["en-US"];
-
-  const completedLabel = {
-    "de-DE": "Erledigt",
-    "en-US": "Completed",
-    "fr-FR": "Terminé",
-    "es-ES": "Completado",
-    "it-IT": "Completato",
-    "pt-PT": "Concluído",
-    "nl-NL": "Voltooid",
-    "pl-PL": "Ukończone",
-    "tr-TR": "Tamamlandı",
-    "ru-RU": "Выполнено",
-    "uk-UA": "Виконано",
-    "ar-SA": "مكتمل",
-    "zh-CN": "已完成",
-    "ja-JP": "完了",
-    "ko-KR": "완료",
-  };
-
-  const completedTasksLabel = {
-    "de-DE": "Erledigte Aufgaben",
-    "en-US": "Completed Tasks",
-    "fr-FR": "Tâches terminées",
-    "es-ES": "Tareas completadas",
-    "it-IT": "Attività completate",
-    "pt-PT": "Tarefas concluídas",
-    "nl-NL": "Voltooide taken",
-    "pl-PL": "Ukończone zadania",
-    "tr-TR": "Tamamlanan görevler",
-    "ru-RU": "Выполненные задачи",
-    "uk-UA": "Виконані завдання",
-    "ar-SA": "المهام المكتملة",
-    "zh-CN": "已完成的任务",
-    "ja-JP": "完了したタスク",
-    "ko-KR": "완료된 할 일",
-  };
-
   return (
     <View
       style={[styles.container, { backgroundColor: theme.colors.background }]}
     >
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title={translate(completedLabel, locale)} />
+        <Appbar.Content title={translate(translations.completed)} />
       </Appbar.Header>
       <View style={styles.header}>
         <Text
@@ -150,7 +105,7 @@ const Completed = ({ navigation }) => {
             { color: theme.colors.onBackground },
           ]}
         >
-          {translate(completedTasksLabel, locale)}
+          {translate(translations.completedTasks)}
         </Text>
         <View style={styles.tasks}>
           {taskItems.map((todo) => {
