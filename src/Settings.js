@@ -141,15 +141,25 @@ const Settings = ({ navigation }) => {
               placeholder={translate(translations.email)}
               value={email}
               onChangeText={(t) => setEmail(t)}
+              autoComplete="username"
+              textContentType="username"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
               mode="flat"
-            ></TextInput>
+            />
+
             <TextInput
               placeholder={translate(translations.password)}
               value={password}
               onChangeText={(t) => setPassword(t)}
+              autoComplete="current-password"
+              textContentType="password"
+              autoCapitalize="none"
+              autoCorrect={false}
               secureTextEntry
               mode="flat"
-            ></TextInput>
+            />
             <View style={styles.accountButtons}>
               <Button onPress={handleSignIn}>
                 {translate(translations.signIn)}

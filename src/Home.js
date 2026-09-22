@@ -146,6 +146,7 @@ const Home = ({ navigation }) => {
     setModalTitle(todo.name);
     setModalContent(todo.content);
     console.log(todo.id);
+    Vibration.vibrate(10);
   };
 
   useEffect(() => {
